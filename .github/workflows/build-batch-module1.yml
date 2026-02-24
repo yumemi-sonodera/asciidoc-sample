@@ -51,6 +51,12 @@ jobs:
       - name: Install Mermaid CLI
         run: npm install -g @mermaid-js/mermaid-cli
 
+      # --- 日本語フォント ---
+      - name: Install Japanese fonts
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fonts-noto-cjk
+
       # --- Puppeteer用の依存パッケージ ---
       - name: Install Puppeteer dependencies
         run: sudo npx puppeteer browsers install chrome --install-deps
@@ -63,14 +69,14 @@ jobs:
 
       # --- ビルド (Makefileのbuildターゲットに準じた形) ---
       - name: Build AsciiDoc to HTML
+        env:
+          DIAGRAM_PLANTUML_CLASSPATH: ${{ github.workspace }}/batch/module1/docs/tools/plantuml.jar
         run: |
           mkdir -p output
-          export PLANTUML_JAR=$(pwd)/tools/plantuml.jar
 
           # _shared/ を除く全 .adoc ファイルを一括ビルド
           asciidoctor \
             -r asciidoctor-diagram \
-            -a plantuml-java-args="-jar ${PLANTUML_JAR}" \
             -a mermaid-puppeteer-config=puppeteer-config.json \
             -D output \
             $(find . -name '*.adoc' -not -path './_shared/*')

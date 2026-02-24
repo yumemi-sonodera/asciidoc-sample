@@ -1,0 +1,51 @@
+name: "[api/module2] Build AsciiDoc and Deploy to GitHub Pages"
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "api/module2/docs/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - "api/module2/docs/**"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./api/module2/docs
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # --- Ruby + Asciidoctor ---
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+
+      - name: Install Asciidoctor
+        run: gem install asciidoctor
+
+      # --- ビルド ---
+      - name: Build AsciiDoc to HTML
+        run: |
+          mkdir -p output
+          asciidoctor \
+            -D output \
+            $(find . -name '*.adoc')
+
+      # --- GitHub Pages へのデプロイ ---
+      - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: ./api/module2/docs/output
+          target-folder: api/module2-docs
+          clean: true

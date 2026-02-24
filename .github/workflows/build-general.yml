@@ -1,10 +1,14 @@
-name: Build AsciiDoc and Deploy to GitHub Pages
+name: "[general] Build AsciiDoc and Deploy to GitHub Pages"
 
 on:
   push:
     branches: [main]
+    paths:
+      - "general/**"
   pull_request:
     branches: [main]
+    paths:
+      - "general/**"
 
 permissions:
   contents: write
@@ -12,6 +16,9 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./general
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -76,6 +83,6 @@ jobs:
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: output
-          target-folder: batch/sample-module1-docs
+          folder: ./general/output
+          target-folder: general
           clean: true

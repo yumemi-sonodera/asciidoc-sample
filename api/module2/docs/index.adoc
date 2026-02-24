@@ -1,0 +1,77 @@
+= APIモジュール2 ドキュメント
+:author: Your Name
+:revdate: 2026-02-24
+:toc: left
+:toclevels: 3
+:sectnums:
+:icons: font
+:source-highlighter: highlight.js
+
+== 概要
+
+APIモジュール2は、ユーザー管理機能を提供するRESTful APIです。
+
+== エンドポイント一覧
+
+[cols="1,2,3", options="header"]
+|===
+| メソッド
+| パス
+| 説明
+
+| GET
+| `/api/v1/users`
+| ユーザー一覧取得
+
+| GET
+| `/api/v1/users/{id}`
+| ユーザー詳細取得
+
+| POST
+| `/api/v1/users`
+| ユーザー新規作成
+
+| PUT
+| `/api/v1/users/{id}`
+| ユーザー情報更新
+
+| DELETE
+| `/api/v1/users/{id}`
+| ユーザー削除
+|===
+
+== リクエスト例
+
+=== ユーザー作成
+
+[source,bash]
+----
+curl -X POST https://api.example.com/api/v1/users \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "山田太郎",
+    "email": "yamada@example.com"
+  }'
+----
+
+=== レスポンス例
+
+[source,json]
+----
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "name": "山田太郎",
+  "email": "yamada@example.com",
+  "createdAt": "2026-02-24T10:00:00Z"
+}
+----
+
+== 認証
+
+すべてのエンドポイントはBearerトークンによる認証が必要です。
+
+[source,bash]
+----
+curl -H "Authorization: Bearer <token>" \
+  https://api.example.com/api/v1/users
+----

@@ -42,6 +42,7 @@ jobs:
         run: |
           gem install asciidoctor
           gem install asciidoctor-diagram
+          gem install asciidoctor-diagram-plantuml
 
       # --- Node.js (Mermaid CLI) ---
       - name: Setup Node.js
@@ -62,16 +63,8 @@ jobs:
       - name: Install Puppeteer dependencies
         run: sudo npx puppeteer browsers install chrome --install-deps
 
-      # --- PlantUML ---
-      - name: Download PlantUML
-        run: |
-          mkdir -p tools
-          curl -L -o tools/plantuml.jar https://github.com/plantuml/plantuml/releases/latest/download/plantuml.jar
-
       # --- ビルド (Makefileのbuildターゲットに準じた形) ---
       - name: Build AsciiDoc to HTML
-        env:
-          DIAGRAM_PLANTUML_CLASSPATH: ${{ github.workspace }}/general/tools/plantuml.jar
         run: |
           mkdir -p output
 

@@ -84,5 +84,7 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: ./general/output
-          target-folder: general
           clean: true
+          clean-exclude: |
+            batch/
+            api/

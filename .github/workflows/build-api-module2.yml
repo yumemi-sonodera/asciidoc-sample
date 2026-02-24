@@ -23,6 +23,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # --- Java (PlantUML実行に必要) ---
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
       # --- Ruby + Asciidoctor ---
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
@@ -30,16 +37,46 @@ jobs:
           ruby-version: '3.3'
           bundler-cache: true
 
-      - name: Install Asciidoctor
-        run: gem install asciidoctor
+      - name: Install Asciidoctor and extensions
+        run: |
+          gem install asciidoctor
+          gem install asciidoctor-diagram
 
-      # --- ビルド ---
+      # --- Node.js (Mermaid CLI) ---
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Mermaid CLI
+        run: npm install -g @mermaid-js/mermaid-cli
+
+      # --- Puppeteer用の依存パッケージ ---
+      - name: Install Puppeteer dependencies
+        run: sudo npx puppeteer browsers install chrome --install-deps
+
+      # --- PlantUML ---
+      - name: Download PlantUML
+        run: |
+          mkdir -p tools
+          curl -L -o tools/plantuml.jar https://github.com/plantuml/plantuml/releases/latest/download/plantuml.jar
+
+      # --- ビルド (Makefileのbuildターゲットに準じた形) ---
       - name: Build AsciiDoc to HTML
         run: |
           mkdir -p output
+          export PLANTUML_JAR=$(pwd)/tools/plantuml.jar
+
+          # _shared/ を除く全 .adoc ファイルを一括ビルド
           asciidoctor \
+            -r asciidoctor-diagram \
+            -a plantuml-java-args="-jar ${PLANTUML_JAR}" \
+            -a mermaid-puppeteer-config=puppeteer-config.json \
             -D output \
-            $(find . -name '*.adoc')
+            $(find . -name '*.adoc' -not -path './_shared/*')
+
+          # 画像等の静的ファイルをコピー
+          cp -r images/ output/images/ 2>/dev/null || true
 
       # --- GitHub Pages へのデプロイ ---
       - name: Deploy to GitHub Pages

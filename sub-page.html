@@ -688,7 +688,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_er図">3.3. ER図</h3>
 <div class="listingblock">
 <div class="content">
-<pre>Failed to generate image: Could not load PlantUML. Either require 'asciidoctor-diagram-plantuml' or specify the location of the PlantUML JAR(s) using the 'DIAGRAM_PLANTUML_CLASSPATH' environment variable. Alternatively a PlantUML binary can be provided (plantuml-native in $PATH).
+<pre>Failed to generate image: Error processing request {:url=&gt;"/plantumlpreprocessor", :body=&gt;"@startuml\nentity \"users\" as users {\n  *id : UUID &lt;&lt;PK&gt;&gt;\n  --\n  *name : VARCHAR(100)\n  *email : VARCHAR(255) &lt;&lt;UQ&gt;&gt;\n  *role : ENUM\n  *created_at : TIMESTAMP\n  *updated_at : TIMESTAMP\n}\n\nentity \"orders\" as orders {\n  *id : UUID &lt;&lt;PK&gt;&gt;\n  --\n  *user_id : UUID &lt;&lt;FK&gt;&gt;\n  *status : ENUM\n  *created_at : TIMESTAMP\n}\n\nentity \"order_items\" as order_items {\n  *id : UUID &lt;&lt;PK&gt;&gt;\n  --\n  *order_id : UUID &lt;&lt;FK&gt;&gt;\n  *product_id : UUID &lt;&lt;FK&gt;&gt;\n  *quantity : INT\n  *price : DECIMAL\n}\n\nentity \"products\" as products {\n  *id : UUID &lt;&lt;PK&gt;&gt;\n  --\n  *name : VARCHAR(200)\n  *price : DECIMAL\n  *stock : INT\n}\n\nusers ||--o{ orders\norders ||--|{ order_items\nproducts ||--o{ order_items\n@enduml", :headers=&gt;{"X-PlantUML-Basedir"=&gt;"/home/runner/work/asciidoc-sample/asciidoc-sample/general"}}
+Encoding of input is UTF-8
 @startuml
 entity "users" as users {
   *id : UUID &lt;&lt;PK&gt;&gt;
@@ -781,7 +782,7 @@ products ||--o{ order_items
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-02-24 04:11:00 UTC
+Last updated 2026-02-24 09:20:17 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>

@@ -1464,124 +1464,25 @@ app.listen(3000); <i class="conum" data-value="4"></i><b>(4)</b></code></pre>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_シーケンス図">13.1. シーケンス図</h3>
-<div class="listingblock">
+<div class="imageblock">
 <div class="content">
-<pre>Failed to generate image: Broken pipe
-@startuml
-actor ユーザー as User
-participant "Webブラウザ" as Browser
-participant "APIサーバー" as API
-database "データベース" as DB
-
-User -&gt; Browser: ログインボタン押下
-Browser -&gt; API: POST /api/login
-API -&gt; DB: ユーザー認証クエリ
-DB --&gt; API: 認証結果
-API --&gt; Browser: JWTトークン
-Browser --&gt; User: ダッシュボード表示
-
-== エラーケース ==
-
-User -&gt; Browser: 不正なパスワード入力
-Browser -&gt; API: POST /api/login
-API -&gt; DB: ユーザー認証クエリ
-DB --&gt; API: 認証失敗
-API --&gt; Browser: 401 Unauthorized
-Browser --&gt; User: エラーメッセージ表示
-@enduml</pre>
+<img src="images/sequence-diagram.svg" alt="sequence diagram" width="528" height="574">
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_クラス図">13.2. クラス図</h3>
-<div class="listingblock">
+<div class="imageblock">
 <div class="content">
-<pre>Failed to generate image: Broken pipe
-@startuml
-package "Domain Layer" {
-  abstract class Entity {
-    - id: UUID
-    + getId(): UUID
-  }
-
-  class User extends Entity {
-    - name: String
-    - email: String
-    - role: Role
-    + getName(): String
-    + getEmail(): String
-  }
-
-  class Order extends Entity {
-    - items: List&lt;OrderItem&gt;
-    - status: OrderStatus
-    + addItem(item: OrderItem): void
-    + getTotalPrice(): BigDecimal
-  }
-
-  class OrderItem {
-    - product: Product
-    - quantity: int
-    - price: BigDecimal
-  }
-
-  enum Role {
-    ADMIN
-    USER
-    GUEST
-  }
-
-  enum OrderStatus {
-    PENDING
-    CONFIRMED
-    SHIPPED
-    DELIVERED
-  }
-
-  User "1" -- "0..*" Order : places &gt;
-  Order "1" *-- "1..*" OrderItem : contains &gt;
-  User --&gt; Role
-  Order --&gt; OrderStatus
-}
-@enduml</pre>
+<img src="images/class-diagram.svg" alt="class diagram" width="366" height="629">
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_コンポーネント図">13.3. コンポーネント図</h3>
-<div class="listingblock">
+<div class="imageblock">
 <div class="content">
-<pre>Failed to generate image: Broken pipe
-@startuml
-package "Frontend" {
-  [SPA (React)] as SPA
-}
-
-package "Backend" {
-  [API Gateway] as GW
-  [Auth Service] as Auth
-  [User Service] as UserSvc
-  [Order Service] as OrderSvc
-}
-
-package "Data Store" {
-  database "PostgreSQL" as PG
-  database "Redis" as Redis
-}
-
-package "External" {
-  [メール送信サービス] as Mail
-}
-
-SPA --&gt; GW : HTTPS
-GW --&gt; Auth : gRPC
-GW --&gt; UserSvc : gRPC
-GW --&gt; OrderSvc : gRPC
-Auth --&gt; Redis : セッション管理
-UserSvc --&gt; PG : JDBC
-OrderSvc --&gt; PG : JDBC
-OrderSvc --&gt; Mail : SMTP
-@enduml</pre>
+<img src="images/component-diagram.svg" alt="component diagram" width="485" height="430">
 </div>
 </div>
 </div>
@@ -2026,7 +1927,7 @@ endif::[]</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2026-02-24 09:20:17 UTC
+Last updated 2026-02-24 09:25:37 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>

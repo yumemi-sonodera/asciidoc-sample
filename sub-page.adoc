@@ -1,0 +1,238 @@
+= サブページ: 詳細設計ドキュメント
+:author: Your Name
+:revdate: 2026-02-21
+:toc: left
+:toclevels: 3
+:sectnums:
+:icons: font
+:source-highlighter: highlight.js
+
+== はじめに
+
+このページは `index.adoc` からの別ファイルリンクのテスト先ドキュメントです。 +
+ページ先頭だけでなく、ページ途中の特定セクションへのリンクも確認できます。
+
+メインページに戻る: xref:index.adoc[メインページへ] +
+メインページのリンクセクション: xref:index.adoc#link-section[メインページ: リンクセクションへ]
+
+// ============================================================
+// API設計セクション (メインからリンクされるアンカー)
+// ============================================================
+
+[[sub-section-api]]
+== API設計
+
+=== エンドポイント一覧
+
+[cols="1,2,3,2", options="header"]
+|===
+| メソッド
+| パス
+| 説明
+| 認証
+
+| GET
+| `/api/users`
+| ユーザー一覧取得
+| 必要
+
+| GET
+| `/api/users/{id}`
+| ユーザー詳細取得
+| 必要
+
+| POST
+| `/api/users`
+| ユーザー新規作成
+| 管理者のみ
+
+| PUT
+| `/api/users/{id}`
+| ユーザー情報更新
+| 本人または管理者
+
+| DELETE
+| `/api/users/{id}`
+| ユーザー削除
+| 管理者のみ
+|===
+
+=== リクエスト・レスポンス例
+
+.POST /api/users リクエスト
+[source,json]
+----
+{
+  "name": "山田太郎",
+  "email": "yamada@example.com",
+  "role": "USER"
+}
+----
+
+.POST /api/users レスポンス (201 Created)
+[source,json]
+----
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "name": "山田太郎",
+  "email": "yamada@example.com",
+  "role": "USER",
+  "createdAt": "2026-02-21T10:00:00Z"
+}
+----
+
+// ============================================================
+// データベース設計セクション (メインからリンクされるアンカー)
+// ============================================================
+
+[[sub-section-database]]
+== データベース設計
+
+=== テーブル定義: users
+
+[cols="2,2,1,1,3", options="header"]
+|===
+| カラム名
+| データ型
+| NULL
+| キー
+| 説明
+
+| id
+| UUID
+| NO
+| PK
+| ユーザーID
+
+| name
+| VARCHAR(100)
+| NO
+|
+| ユーザー名
+
+| email
+| VARCHAR(255)
+| NO
+| UQ
+| メールアドレス
+
+| role
+| ENUM
+| NO
+|
+| 権限 (ADMIN, USER, GUEST)
+
+| created_at
+| TIMESTAMP
+| NO
+|
+| 作成日時
+
+| updated_at
+| TIMESTAMP
+| NO
+|
+| 更新日時
+|===
+
+=== テーブル定義: orders
+
+[cols="2,2,1,1,3", options="header"]
+|===
+| カラム名
+| データ型
+| NULL
+| キー
+| 説明
+
+| id
+| UUID
+| NO
+| PK
+| 注文ID
+
+| user_id
+| UUID
+| NO
+| FK
+| ユーザーID (users.id)
+
+| status
+| ENUM
+| NO
+|
+| 状態 (PENDING, CONFIRMED, SHIPPED, DELIVERED)
+
+| created_at
+| TIMESTAMP
+| NO
+|
+| 作成日時
+|===
+
+=== ER図
+
+[plantuml, sub-er-diagram, svg]
+----
+@startuml
+entity "users" as users {
+  *id : UUID <<PK>>
+  --
+  *name : VARCHAR(100)
+  *email : VARCHAR(255) <<UQ>>
+  *role : ENUM
+  *created_at : TIMESTAMP
+  *updated_at : TIMESTAMP
+}
+
+entity "orders" as orders {
+  *id : UUID <<PK>>
+  --
+  *user_id : UUID <<FK>>
+  *status : ENUM
+  *created_at : TIMESTAMP
+}
+
+entity "order_items" as order_items {
+  *id : UUID <<PK>>
+  --
+  *order_id : UUID <<FK>>
+  *product_id : UUID <<FK>>
+  *quantity : INT
+  *price : DECIMAL
+}
+
+entity "products" as products {
+  *id : UUID <<PK>>
+  --
+  *name : VARCHAR(200)
+  *price : DECIMAL
+  *stock : INT
+}
+
+users ||--o{ orders
+orders ||--|{ order_items
+products ||--o{ order_items
+@enduml
+----
+
+// ============================================================
+// 付録セクション (メインからリンクされるアンカー)
+// ============================================================
+
+[[sub-appendix]]
+== 付録
+
+=== 用語集
+
+[glossary]
+API (Application Programming Interface):: アプリケーション間の通信インターフェースを定義する仕組み。
+REST (Representational State Transfer):: Webサービス設計のためのアーキテクチャスタイル。
+JWT (JSON Web Token):: JSONベースのアクセストークン規格。認証・認可に使用される。
+gRPC:: Googleが開発した高性能なRPCフレームワーク。Protocol Buffersを使用する。
+
+=== 参考資料
+
+* https://asciidoctor.org/docs/user-manual/[Asciidoctor User Manual]
+* https://plantuml.com/ja/[PlantUML 日本語ドキュメント]
+* https://mermaid.js.org/intro/[Mermaid 公式ドキュメント]

@@ -1,0 +1,934 @@
+= AsciiDoc サンプルドキュメント
+:author: Your Name
+:revdate: 2026-02-21
+:revnumber: 1.0
+:toc: left
+:toclevels: 3
+:sectnums:
+:icons: font
+:source-highlighter: highlight.js
+:imagesdir: images
+// PlantUML出力先
+:plantuml-output-type: svg
+
+// ============================================================
+// 共通ドキュメントのインライン展開
+// ============================================================
+
+include::_shared/common-notice.adoc[]
+
+// ============================================================
+// 1. 見出し (Headings)
+// ============================================================
+
+== 見出しレベル2
+
+=== 見出しレベル3
+
+==== 見出しレベル4
+
+===== 見出しレベル5
+
+// ============================================================
+// 2. 段落・改行
+// ============================================================
+
+== 段落と改行
+
+通常の段落はそのまま記述します。
+空行を挟むと別の段落になります。
+
+これは別の段落です。 +
+行末に ` +` を付けると、同じ段落内で改行できます。 +
+このように続きます。
+
+[%hardbreaks]
+hardbreaks属性を使うと
+この中では自動的に
+改行が適用されます。
+
+// ============================================================
+// 3. テキスト装飾 (Inline Formatting)
+// ============================================================
+
+== テキスト装飾
+
+*太字（Bold）* はアスタリスクで囲みます。
+
+_斜体（Italic）_ はアンダースコアで囲みます。
+
+*_太字かつ斜体_* も可能です。
+
+`インラインコード（Monospace）` はバッククォートで囲みます。
+
+[.line-through]#取り消し線# はロール属性で表現します。
+
+^上付き文字^ と ~下付き文字~ も使えます。
+
+#ハイライト（マーク）# はハッシュで囲みます。
+
+// ============================================================
+// 4. リスト (Lists)
+// ============================================================
+
+== リスト
+
+=== 順序なしリスト
+
+* 項目1
+* 項目2
+** ネストされた項目2-1
+** ネストされた項目2-2
+*** さらにネスト2-2-1
+* 項目3
+
+=== 順序付きリスト
+
+. 最初の手順
+. 次の手順
+.. サブステップ2-1
+.. サブステップ2-2
+... さらにサブステップ2-2-1
+. 最後の手順
+
+=== チェックリスト
+
+* [x] 完了したタスク
+* [x] これも完了
+* [ ] まだ未完了のタスク
+* [ ] これも未完了
+
+=== 定義リスト
+
+AsciiDoc:: テキストベースのドキュメント記法。構造化された文書を簡潔に記述できる。
+PlantUML:: テキストからUML図を生成するツール。
+Mermaid:: JavaScriptベースの図表生成ツール。
+
+// ============================================================
+// 5. テーブル (Tables)
+// ============================================================
+
+== テーブル
+
+=== 基本テーブル
+
+[cols="1,2,1", options="header"]
+|===
+| ヘッダ1
+| ヘッダ2
+| ヘッダ3
+
+| セルA1
+| セルA2
+| セルA3
+
+| セルB1
+| セルB2
+| セルB3
+|===
+
+=== セル結合のあるテーブル
+
+[cols="1,1,1", options="header"]
+|===
+| 列1 | 列2 | 列3
+
+// 横方向の結合 (colspan)
+3+| この行は3列を結合しています
+
+// 縦方向の結合 (rowspan)
+.2+| 2行結合
+| B2
+| B3
+| C2
+| C3
+
+| D1
+| D2
+| D3
+|===
+
+=== CSV形式のテーブル
+
+[%header, format=csv]
+|===
+名前,言語,用途
+Asciidoctor,Ruby,AsciiDoc変換
+asciidoctor-js,JavaScript,ブラウザ向け変換
+asciidoctor-pdf,Ruby,PDF出力
+|===
+
+=== 幅指定・配置のテーブル
+
+[cols=">.^1,<.^3,^.^1", options="header"]
+|===
+| 右寄せ
+| 左寄せ
+| 中央寄せ
+
+| 100
+| 基本プラン
+| OK
+
+| 200
+| スタンダードプラン
+| OK
+
+| 300
+| プレミアムプラン
+| OK
+|===
+
+=== Markdownのテーブル記法との比較
+
+Markdownでは以下のようにパイプ記法でテーブルを書きます:
+
+[source,markdown]
+----
+| ヘッダ1 | ヘッダ2 | ヘッダ3 |
+|---------|---------|---------|
+| A1      | A2      | A3      |
+| B1      | B2      | B3      |
+----
+
+**AsciiDocではこの記法はそのまま使えません。** +
+AsciiDocのテーブルは `|===` で開始・終了する独自記法です。
+
+ただし、AsciiDocにはMarkdownに近い感覚で書ける代替手段がいくつかあります:
+
+==== 方法1: 1行1行にパイプ区切りで書く（最もMarkdownに近い）
+
+ヘッダ行のみ1行にまとめ、データ行も1行にまとめて書けます:
+
+[cols="1,1,1", options="header"]
+|===
+| ヘッダ1 | ヘッダ2 | ヘッダ3
+| A1      | A2      | A3
+| B1      | B2      | B3
+|===
+
+上記のソースはこうなります:
+
+[source,asciidoc]
+----
+[cols="1,1,1", options="header"]
+|===
+| ヘッダ1 | ヘッダ2 | ヘッダ3
+| A1      | A2      | A3
+| B1      | B2      | B3
+|===
+----
+
+==== 方法2: CSV形式（カンマ区切り）
+
+Markdownのパイプの代わりにカンマで区切る方法です:
+
+[%header, format=csv]
+|===
+ヘッダ1,ヘッダ2,ヘッダ3
+A1,A2,A3
+B1,B2,B3
+|===
+
+ソース:
+
+[source,asciidoc]
+----
+[%header, format=csv]
+|===
+ヘッダ1,ヘッダ2,ヘッダ3
+A1,A2,A3
+B1,B2,B3
+|===
+----
+
+==== 方法3: DSV形式（コロン区切り）
+
+区切り文字にコロンを使う方法です:
+
+[%header, format=dsv]
+|===
+ヘッダ1:ヘッダ2:ヘッダ3
+A1:A2:A3
+B1:B2:B3
+|===
+
+ソース:
+
+[source,asciidoc]
+----
+[%header, format=dsv]
+|===
+ヘッダ1:ヘッダ2:ヘッダ3
+A1:A2:A3
+B1:B2:B3
+|===
+----
+
+==== まとめ
+
+[cols="1,2,1", options="header"]
+|===
+| 方法 | 特徴 | Markdownとの近さ
+
+| パイプ1行記法
+| Markdownに最も近い見た目。`cols` で幅を制御可能
+| ★★★
+
+| CSV形式
+| カンマ区切りで簡潔。スプレッドシートからの貼付けに便利
+| ★★☆
+
+| DSV形式
+| コロン区切り。セル内にカンマを含むデータに便利
+| ★☆☆
+|===
+
+NOTE: いずれの方法でも、AsciiDocの `|===` による開始・終了は必須です。Markdownの `|---|` のような区切り行は不要です。
+
+// ============================================================
+// 6. コードブロック (Source Code)
+// ============================================================
+
+== コードブロック
+
+=== Java
+
+[source,java]
+----
+public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, AsciiDoc!");
+    }
+}
+----
+
+=== Python
+
+[source,python]
+----
+def greet(name: str) -> str:
+    """挨拶を返す関数"""
+    return f"Hello, {name}!"
+
+if __name__ == "__main__":
+    print(greet("AsciiDoc"))
+----
+
+=== YAML
+
+[source,yaml]
+----
+server:
+  port: 8080
+  host: localhost
+database:
+  url: jdbc:postgresql://localhost:5432/mydb
+  username: admin
+----
+
+=== コールアウト付きコードブロック
+
+[source,javascript]
+----
+const express = require('express'); // <1>
+const app = express(); // <2>
+
+app.get('/', (req, res) => { // <3>
+  res.send('Hello World!');
+});
+
+app.listen(3000); // <4>
+----
+<1> Expressモジュールの読み込み
+<2> アプリケーションインスタンスの作成
+<3> ルートパスのハンドラ定義
+<4> ポート3000で待ち受け開始
+
+// ============================================================
+// 7. 引用 (Blockquotes / Admonitions)
+// ============================================================
+
+== 引用・注意書き
+
+=== 引用ブロック
+
+[quote, Albert Einstein]
+____
+想像力は知識よりも重要だ。知識には限界がある。だが、想像力は世界を包み込む。
+____
+
+=== 出典付き引用
+
+[quote, Martin Fowler, "Refactoring"]
+____
+プログラムが動いているだけでは十分ではない。リファクタリングとは、ソフトウェアの外部的な振る舞いを変えずに、内部構造を改善することだ。
+____
+
+=== 注意書き (Admonitions)
+
+NOTE: これは補足情報です。読者に追加のコンテキストを提供します。
+
+TIP: これはヒントです。ベストプラクティスや便利なテクニックを示します。
+
+IMPORTANT: これは重要な情報です。見逃すと問題が発生する可能性があります。
+
+WARNING: これは警告です。注意しないとデータ損失や障害が発生する恐れがあります。
+
+CAUTION: これは注意喚起です。特定のリスクに対する予防措置を示します。
+
+=== ブロック形式の注意書き
+
+[NOTE]
+====
+ブロック形式にすると、
+複数行にわたる長い説明を
+注意書きの中に含めることができます。
+
+* リスト項目も含められます
+* コードブロックも含められます
+
+[source,bash]
+----
+echo "注意書き内のコードブロック"
+----
+====
+
+// ============================================================
+// 8. 水平線
+// ============================================================
+
+== 水平線
+
+上のテキスト
+
+'''
+
+下のテキスト
+
+// ============================================================
+// 9. 画像
+// ============================================================
+
+== 画像
+
+=== ブロック画像（中央配置・キャプション付き）
+
+.サンプル画像のキャプション
+image::sample.png[サンプル画像, 400, 300]
+
+=== インライン画像
+
+テキスト中に image:sample.png[小アイコン, 24, 24] のようにインライン画像を埋め込めます。
+
+=== URL画像
+
+image::https://asciidoctor.org/images/octocat.jpg[GitHub Octocat, 200, 200]
+
+// ============================================================
+// 10. リンク
+// ============================================================
+
+[[link-section]]
+== リンク
+
+=== 外部Webサイトへのリンク
+
+* https://asciidoctor.org[Asciidoctor 公式サイト]
+* https://github.com[GitHub]
+* https://plantuml.com[PlantUML 公式サイト]
+* https://mermaid.js.org[Mermaid 公式サイト]
+* 自動リンク: https://example.com
+
+=== 別AsciiDocファイルへのリンク（ページ先頭）
+
+* xref:sub-page.adoc[サブページへのリンク（ページ先頭）]
+
+=== 別AsciiDocファイルへのリンク（ページ途中のアンカー）
+
+* xref:sub-page.adoc#sub-section-api[サブページ: API設計セクションへ]
+* xref:sub-page.adoc#sub-section-database[サブページ: データベース設計セクションへ]
+* xref:sub-page.adoc#sub-appendix[サブページ: 付録セクションへ]
+
+=== ページ内リンク（アンカー）
+
+<<plantuml-section>> へジャンプ +
+<<mermaid-section>> へジャンプ +
+<<include-section>> へジャンプ +
+<<table-of-contents-explanation>> へジャンプ
+
+// ============================================================
+// 11. PlantUML 図
+// ============================================================
+
+[[plantuml-section]]
+== PlantUML 図
+
+=== シーケンス図
+
+[plantuml, sequence-diagram, svg]
+----
+@startuml
+actor ユーザー as User
+participant "Webブラウザ" as Browser
+participant "APIサーバー" as API
+database "データベース" as DB
+
+User -> Browser: ログインボタン押下
+Browser -> API: POST /api/login
+API -> DB: ユーザー認証クエリ
+DB --> API: 認証結果
+API --> Browser: JWTトークン
+Browser --> User: ダッシュボード表示
+
+== エラーケース ==
+
+User -> Browser: 不正なパスワード入力
+Browser -> API: POST /api/login
+API -> DB: ユーザー認証クエリ
+DB --> API: 認証失敗
+API --> Browser: 401 Unauthorized
+Browser --> User: エラーメッセージ表示
+@enduml
+----
+
+=== クラス図
+
+[plantuml, class-diagram, svg]
+----
+@startuml
+package "Domain Layer" {
+  abstract class Entity {
+    - id: UUID
+    + getId(): UUID
+  }
+
+  class User extends Entity {
+    - name: String
+    - email: String
+    - role: Role
+    + getName(): String
+    + getEmail(): String
+  }
+
+  class Order extends Entity {
+    - items: List<OrderItem>
+    - status: OrderStatus
+    + addItem(item: OrderItem): void
+    + getTotalPrice(): BigDecimal
+  }
+
+  class OrderItem {
+    - product: Product
+    - quantity: int
+    - price: BigDecimal
+  }
+
+  enum Role {
+    ADMIN
+    USER
+    GUEST
+  }
+
+  enum OrderStatus {
+    PENDING
+    CONFIRMED
+    SHIPPED
+    DELIVERED
+  }
+
+  User "1" -- "0..*" Order : places >
+  Order "1" *-- "1..*" OrderItem : contains >
+  User --> Role
+  Order --> OrderStatus
+}
+@enduml
+----
+
+=== コンポーネント図
+
+[plantuml, component-diagram, svg]
+----
+@startuml
+package "Frontend" {
+  [SPA (React)] as SPA
+}
+
+package "Backend" {
+  [API Gateway] as GW
+  [Auth Service] as Auth
+  [User Service] as UserSvc
+  [Order Service] as OrderSvc
+}
+
+package "Data Store" {
+  database "PostgreSQL" as PG
+  database "Redis" as Redis
+}
+
+package "External" {
+  [メール送信サービス] as Mail
+}
+
+SPA --> GW : HTTPS
+GW --> Auth : gRPC
+GW --> UserSvc : gRPC
+GW --> OrderSvc : gRPC
+Auth --> Redis : セッション管理
+UserSvc --> PG : JDBC
+OrderSvc --> PG : JDBC
+OrderSvc --> Mail : SMTP
+@enduml
+----
+
+// ============================================================
+// 12. Mermaid 図
+// ============================================================
+
+[[mermaid-section]]
+== Mermaid 図
+
+=== フローチャート
+
+[mermaid]
+----
+flowchart TD
+    A[開始] --> B{ユーザー認証済み?}
+    B -- Yes --> C[ダッシュボード表示]
+    B -- No --> D[ログインページ表示]
+    D --> E[認証情報入力]
+    E --> F{認証成功?}
+    F -- Yes --> C
+    F -- No --> G[エラーメッセージ表示]
+    G --> D
+    C --> H[終了]
+----
+
+=== ER図
+
+[mermaid]
+----
+erDiagram
+    USER ||--o{ ORDER : places
+    USER {
+        uuid id PK
+        string name
+        string email
+        enum role
+    }
+    ORDER ||--|{ ORDER_ITEM : contains
+    ORDER {
+        uuid id PK
+        uuid user_id FK
+        enum status
+        datetime created_at
+    }
+    ORDER_ITEM {
+        uuid id PK
+        uuid order_id FK
+        uuid product_id FK
+        int quantity
+        decimal price
+    }
+    PRODUCT ||--o{ ORDER_ITEM : "is ordered in"
+    PRODUCT {
+        uuid id PK
+        string name
+        decimal price
+        int stock
+    }
+----
+
+=== ガントチャート
+
+[mermaid]
+----
+gantt
+    title プロジェクトスケジュール
+    dateFormat  YYYY-MM-DD
+    section 設計フェーズ
+        要件定義       :done,    des1, 2026-01-01, 2026-01-15
+        基本設計       :done,    des2, 2026-01-16, 2026-01-31
+        詳細設計       :active,  des3, 2026-02-01, 2026-02-28
+    section 開発フェーズ
+        バックエンド開発 :         dev1, 2026-03-01, 2026-04-15
+        フロントエンド開発:        dev2, 2026-03-15, 2026-04-30
+    section テストフェーズ
+        単体テスト     :         test1, 2026-04-01, 2026-04-30
+        結合テスト     :         test2, 2026-05-01, 2026-05-31
+        受入テスト     :         test3, 2026-06-01, 2026-06-15
+----
+
+=== 状態遷移図
+
+[mermaid]
+----
+stateDiagram-v2
+    [*] --> 下書き
+    下書き --> レビュー中 : レビュー依頼
+    レビュー中 --> 差し戻し : 指摘あり
+    レビュー中 --> 承認済み : 承認
+    差し戻し --> 下書き : 修正
+    承認済み --> 公開済み : 公開
+    公開済み --> アーカイブ : アーカイブ
+    アーカイブ --> [*]
+----
+
+// ============================================================
+// 13. 共通ドキュメントのインライン展開 (include)
+// ============================================================
+
+[[include-section]]
+== 共通ドキュメントのインライン展開
+
+以下は `_shared/common-notice.adoc` をインライン展開した例です。 +
+冒頭でも `include::` を使用して共通の注意書きを展開済みです。
+
+ここでは **レベルオフセット付き** で再度展開します:
+
+:leveloffset: +2
+
+include::_shared/common-notice.adoc[]
+
+:leveloffset: -2
+
+上記のように `include` ディレクティブを使うことで、共通の文書部品を複数のドキュメントに展開できます。
+
+=== include の応用例
+
+部分的な取り込み（タグ指定）も可能です:
+
+[source,asciidoc]
+----
+// 共通ファイル側で tag::重要[] ... end::重要[] で囲む
+\include::_shared/common-notice.adoc[tag=important-section]
+----
+
+行番号指定での取り込み:
+
+[source,asciidoc]
+----
+\include::_shared/common-notice.adoc[lines=1..5]
+----
+
+// ============================================================
+// 14. 脚注 (Footnotes)
+// ============================================================
+
+== 脚注
+
+AsciiDocはAsciidoctorfootnote:[Asciidoctorは、AsciiDocテキストを処理してHTML5やDocBookなどに変換するテキストプロセッサです。]によって変換されます。
+
+PlantUMLfootnote:[PlantUMLはオープンソースのUML図生成ツールで、テキストベースの記法からさまざまなUML図を生成できます。]との統合も可能です。
+
+// ============================================================
+// 15. サイドバー・例示ブロック
+// ============================================================
+
+== 特殊ブロック
+
+=== サイドバー
+
+****
+.サイドバーのタイトル
+これはサイドバーブロックです。補足的な情報や、本文から独立したコンテンツを表示するのに使います。
+
+背景色やボーダーが付き、視覚的に区別されます。
+****
+
+=== 例示ブロック (Example)
+
+====
+.例示ブロックのタイトル
+これは例示ブロックです。具体例やサンプルを示す際に使用します。
+
+入力::
+  `curl -X GET https://api.example.com/users`
+
+出力::
+  `{"users": [{"id": 1, "name": "Alice"}]}`
+====
+
+=== リテラルブロック
+
+....
+これはリテラルブロックです。
+  インデントやスペースが
+    そのまま保持されます。
+コード以外のテキストをそのまま表示したいときに使います。
+....
+
+=== オープンブロック
+
+--
+オープンブロックは汎用的なコンテナです。
+他のブロックと組み合わせて使えます。
+
+* リストも含められます
+* 柔軟な構造を作れます
+--
+
+// ============================================================
+// 16. パススルー (HTML埋め込み)
+// ============================================================
+
+== パススルー（HTML埋め込み）
+
+++++
+<div style="padding: 16px; background-color: #e8f4fd; border-left: 4px solid #0366d6; margin: 16px 0;">
+  <strong>HTMLパススルー:</strong> AsciiDocでは直接HTMLを埋め込むことができます。
+  <br>Markdownの生HTMLと同様の機能です。
+</div>
+++++
+
+// ============================================================
+// 17. 目次について
+// ============================================================
+
+[[table-of-contents-explanation]]
+== 目次（TOC）について
+
+このドキュメントの左側に表示されている目次は、ヘッダの以下の属性で自動生成されています:
+
+[source,asciidoc]
+----
+:toc: left        // 目次の配置位置 (left, right, auto, preamble)
+:toclevels: 3     // 目次に含める見出しの深さ
+:sectnums:        // セクション番号の自動付与
+----
+
+// ============================================================
+// 18. エスケープ・特殊文字
+// ============================================================
+
+== エスケープと特殊文字
+
+バックスラッシュでAsciiDocの記法をエスケープできます:
+
+* \*太字にならない\*
+* \_斜体にならない\_
+* \`コードにならない\`
+
+特殊文字:
+
+* エムダッシュ: --
+* 省略記号: ...
+* 矢印: ->  <-  =>  <=
+* (C) (R) (TM)
+
+// ============================================================
+// 19. 条件付き出力
+// ============================================================
+
+== 条件付き出力（AsciiDoc独自機能）
+
+AsciiDocでは属性による条件分岐が可能です:
+
+[source,asciidoc]
+----
+// 属性の定義
+:env: production
+
+// 条件付き出力
+\ifdef::env[この行は env 属性が定義されていれば表示されます。]
+
+\ifndef::backend-pdf[この行はPDF出力でない場合に表示されます。]
+
+\ifeval::["{env}" == "production"]
+本番環境向けの注意事項がここに表示されます。
+\endif::[]
+----
+
+// ============================================================
+// 20. キーボードショートカット・UI要素
+// ============================================================
+
+== UI要素の表記
+
+キーボードショートカット: kbd:[Ctrl+Shift+P]
+
+ボタン: btn:[OK] btn:[キャンセル]
+
+メニュー操作: menu:ファイル[設定 > エディタ > フォント]
+
+// ============================================================
+// 付録: Markdown vs AsciiDoc 対応表
+// ============================================================
+
+[appendix]
+== Markdown vs AsciiDoc 対応表
+
+[cols="2,3,3", options="header"]
+|===
+| 機能
+| Markdown
+| AsciiDoc
+
+| 見出し
+| `# H1` `## H2`
+| `= H1` `== H2`
+
+| 太字
+| `**bold**`
+| `*bold*`
+
+| 斜体
+| `*italic*`
+| `_italic_`
+
+| コード（インライン）
+| +\`code\`+
+| +\`code\`+
+
+| コードブロック
+| +\`\`\`java+
+| `[source,java]` + `----`
+
+| リンク
+| `[text](url)`
+| `url[text]`
+
+| 画像
+| `![alt](path)`
+| `image::path[alt]`
+
+| テーブル
+| パイプ記法（結合不可）
+| パイプ記法（結合可能）
+
+| 引用
+| `> quote`
+| ブロック `____`
+
+| チェックリスト
+| `- [x]`
+| `* [x]`
+
+| 注意書き
+| なし（独自拡張のみ）
+| NOTE, TIP, WARNING 等
+
+| 目次
+| なし（ツール依存）
+| `:toc:` 属性
+
+| インクルード
+| なし
+| `include::file[]`
+
+| PlantUML
+| なし（独自拡張のみ）
+| `[plantuml]` ブロック
+
+| Mermaid
+| なし（GitHub拡張のみ）
+| `[mermaid]` ブロック
+
+| 脚注
+| `[^1]`（拡張）
+| `footnote:[]`
+
+| 相互参照
+| なし
+| `<<anchor>>` / `xref:`
+|===
